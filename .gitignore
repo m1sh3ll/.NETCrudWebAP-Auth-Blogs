@@ -1,0 +1,6 @@
+﻿bin
+obj
+appsettings.json
+.vs
+sqlite.db
+Properties/PublishProfiles/
