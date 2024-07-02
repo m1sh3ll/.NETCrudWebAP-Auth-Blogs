@@ -8,6 +8,7 @@ using System;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotnetAPI2.Controllers
 {
@@ -27,6 +28,7 @@ namespace DotnetAPI2.Controllers
 
     
     [HttpGet("GetUsers")]
+    [Authorize]
     public IEnumerable<User> GetUsers()
     {
       IEnumerable<User> users = _db.Users.ToList<User>();
@@ -37,6 +39,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpGet("GetSingleUser/{userId}")]
+    [Authorize]
     public User GetSingleUser(int userId)
     {
 
@@ -48,6 +51,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpGet("UserSalary/{userId}")]
+    [Authorize]
     public IEnumerable<UserSalary> GetUserSalaryEF(int userId)
     {
       return _db.UserSalary
@@ -56,6 +60,7 @@ namespace DotnetAPI2.Controllers
     }
 
     [HttpPost("UserSalary")]
+    [Authorize]
     public IActionResult PostUserSalaryEf(UserSalary userForInsert)
     {
       _db.UserSalary.Add(userForInsert);
@@ -68,6 +73,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpPut("UserSalary")]
+    [Authorize]
     public IActionResult PutUserSalaryEf(UserSalary userForUpdate)
     {
       UserSalary? userToUpdate = _db.UserSalary
@@ -88,6 +94,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpDelete("UserSalary/{userId}")]
+    [Authorize]
     public IActionResult DeleteUserSalaryEf(int userId)
     {
       UserSalary? userToDelete = _db.UserSalary
@@ -108,6 +115,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpGet("UserJobInfo/{userId}")]
+    [Authorize]
     public IEnumerable<UserJobInfo> GetUserJobInfoEF(int userId)
     {
       return _db.UserJobInfo
@@ -116,6 +124,7 @@ namespace DotnetAPI2.Controllers
     }
 
     [HttpPost("UserJobInfo")]
+    [Authorize]
     public IActionResult PostUserJobInfoEf(UserJobInfo userForInsert)
     {
       _db.UserJobInfo.Add(userForInsert);
@@ -128,6 +137,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpPut("UserJobInfo")]
+    [Authorize]
     public IActionResult PutUserJobInfoEf(UserJobInfo userForUpdate)
     {
       UserJobInfo? userToUpdate = _db.UserJobInfo
@@ -148,6 +158,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpDelete("UserJobInfo/{userId}")]
+    [Authorize]
     public IActionResult DeleteUserJobInfoEf(int userId)
     {
       UserJobInfo? userToDelete = _db.UserJobInfo
@@ -170,6 +181,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpPut("EditUser")]
+    [Authorize]
     public IActionResult EditUser(User user)
     {
       User? userDb = _db.Users
@@ -196,6 +208,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpPut("AddUser")]
+    [Authorize]
     public IActionResult AddUser(UserToAddDto userToAddDto)
     {
       User userDb = new User();
@@ -217,6 +230,7 @@ namespace DotnetAPI2.Controllers
 
 
     [HttpPut("DeleteUser/{userId}")]
+    [Authorize]
     public IActionResult DeleteUser(int userId)
     {
       User? userDb = _db.Users
