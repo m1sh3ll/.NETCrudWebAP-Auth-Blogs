@@ -90,7 +90,7 @@ namespace DotNetAPI2.Controllers
         IsVisible = blogPostCreateDto.IsVisible
       };
 
-      await _blogPostRepository.CreateAsync(blogPost);
+      blogPost = await _blogPostRepository.CreateAsync(blogPost);
 
       //Domain model to Dto
       var response = new BlogPostDto

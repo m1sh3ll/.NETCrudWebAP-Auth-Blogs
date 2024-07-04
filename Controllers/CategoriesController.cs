@@ -77,7 +77,7 @@ namespace DotNetAPI2.Controllers
         UrlHandle = categoryCreateDto.UrlHandle
       };
 
-      await _categoryRepository.CreateAsync(category);
+      category = await _categoryRepository.CreateAsync(category);
 
       //Domain model to Dto
       var response = new CategoryDto
