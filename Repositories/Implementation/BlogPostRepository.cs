@@ -15,6 +15,8 @@ namespace DotNetAPI2.Repositories.Implementation
       this._db = db;
     }
 
+
+    //Create/Add
     async Task<BlogPost> IBlogPostRepository.CreateAsync(BlogPost blogPost)
     {
       await _db.BlogPosts.AddAsync(blogPost);
