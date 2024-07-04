@@ -15,9 +15,7 @@ namespace DotNetAPI2.Data
     public DbSet<Category> Categories { get; set; }
 
     public DbSet<BlogPost> BlogPosts { get; set; }  
-    public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<UserSalary> UserSalary { get; set; }
-    public virtual DbSet<UserJobInfo> UserJobInfo { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
