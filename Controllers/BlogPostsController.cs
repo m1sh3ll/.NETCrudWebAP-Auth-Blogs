@@ -1,9 +1,6 @@
 ﻿using DotNetAPI2.Dtos;
 using DotNetAPI2.Models;
-using DotNetAPI2.Repositories.Implementation;
 using DotNetAPI2.Repositories.Interface;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetAPI2.Controllers
@@ -76,11 +73,12 @@ namespace DotNetAPI2.Controllers
       return Ok(response);
     }
 
+    //POST: {apibasurl}/api/blogposts
     [HttpPost]  
-    public async Task<IActionResult> CreateBlogPost(BlogPostCreateDto blogPostCreateDto)
+    public async Task<IActionResult> CreateBlogPost([FromBody] BlogPostCreateDto blogPostCreateDto)
     {
-      // Map DTO to Domain Model
-      BlogPost blogPost = new BlogPost
+      // Convert DTO to Domain Model
+      var blogPost = new BlogPost
       {    
         Title = blogPostCreateDto.Title,
         ShortDescription = blogPostCreateDto.ShortDescription,
