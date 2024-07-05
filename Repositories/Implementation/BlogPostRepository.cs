@@ -37,7 +37,7 @@ namespace DotNetAPI2.Repositories.Implementation
         return null;
 
       }
-      _db.Remove(existingBlogPost);
+      _db.BlogPosts.Remove(existingBlogPost);
       await _db.SaveChangesAsync();
       return existingBlogPost;
     }
@@ -51,10 +51,13 @@ namespace DotNetAPI2.Repositories.Implementation
     }
 
 
+
     public async Task<BlogPost?> GetByIdAsync(Guid id)
     {
       return await _db.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
     }
+
+
 
     public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
     {

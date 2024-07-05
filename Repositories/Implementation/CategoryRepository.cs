@@ -64,7 +64,7 @@ namespace DotNetAPI2.Repositories.Implementation
         return null;
 
       }
-      _db.Remove(existingCategory);
+      _db.Categories.Remove(existingCategory);
       await _db.SaveChangesAsync();
       return existingCategory;
 

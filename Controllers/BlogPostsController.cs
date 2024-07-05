@@ -140,31 +140,6 @@ namespace DotNetAPI2.Controllers
       return Ok(response);
     }
 
-    //DELETE: {apibaseurl}/api/blogposts/{id}
-    [HttpDelete("{id:Guid}")]
-    public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
-    {
-      var blogPost = await _blogPostRepository.DeleteAsync(id);
-      if (blogPost is null)
-      {
-        return NotFound();
-      }
-      //convert domain to dto
-      var response = new BlogPostDto
-      {
-        Id = blogPost.Id,
-        Title = blogPost.Title,
-        ShortDescription = blogPost.ShortDescription,
-        Content = blogPost.Content,
-        FeaturedImageUrl = blogPost.FeaturedImageUrl,
-        UrlHandle = blogPost.UrlHandle,
-        PublishedDate = blogPost.PublishedDate,
-        Author = blogPost.Author,
-        IsVisible = blogPost.IsVisible
-      };
-
-      return Ok(response);
-    }
 
     //PUT: {apibaseurl}/api/blogposts/{id}
     [HttpPut("{id:Guid}")]
@@ -218,6 +193,34 @@ namespace DotNetAPI2.Controllers
           Name = x.Name,
           UrlHandle = x.UrlHandle
         }).ToList()
+      };
+
+      return Ok(response);
+    }
+
+    //DELETE: {apibaseurl}/api/blogposts/{id}
+    [HttpDelete("{id:Guid}")]
+    public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
+    {
+      var deletedBlogPost = await _blogPostRepository.DeleteAsync(id);
+
+      if (deletedBlogPost is null)
+      {
+        return NotFound();
+      }
+      //convert domain to dto
+      var response = new BlogPostDto
+      {
+        Id = deletedBlogPost.Id,
+        Title = deletedBlogPost.Title,
+        ShortDescription = deletedBlogPost.ShortDescription,
+        Content = deletedBlogPost.Content,
+        FeaturedImageUrl = deletedBlogPost.FeaturedImageUrl,
+        UrlHandle = deletedBlogPost.UrlHandle,
+        PublishedDate = deletedBlogPost.PublishedDate,
+        Author = deletedBlogPost.Author,
+        IsVisible = deletedBlogPost.IsVisible,
+
       };
 
       return Ok(response);
