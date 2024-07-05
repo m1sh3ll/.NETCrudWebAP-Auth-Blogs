@@ -1,4 +1,6 @@
-﻿namespace DotNetAPI2.Dtos
+﻿using DotNetAPI2.Models;
+
+namespace DotNetAPI2.Dtos
 {
   public class BlogPostUpdateDto
   {
@@ -17,5 +19,6 @@
     public string Author { get; set; }
 
     public bool IsVisible { get; set; }
+    public List<Category> Categories { get; set; }
   }
 }

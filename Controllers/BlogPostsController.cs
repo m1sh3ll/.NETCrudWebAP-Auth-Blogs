@@ -1,6 +1,9 @@
-﻿using DotNetAPI2.Dtos;
+﻿using Azure.Core;
+using DotNetAPI2.Dtos;
 using DotNetAPI2.Models;
+using DotNetAPI2.Repositories.Implementation;
 using DotNetAPI2.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetAPI2.Controllers
@@ -10,23 +13,78 @@ namespace DotNetAPI2.Controllers
   public class BlogPostsController : ControllerBase
   {
     private readonly IBlogPostRepository _blogPostRepository;
+    private readonly ICategoryRepository _categoryRepository; 
 
-
-    public BlogPostsController(IBlogPostRepository blogPostRepository)
+    public BlogPostsController(IBlogPostRepository blogPostRepository,
+    ICategoryRepository categoryRepository)
     {
       this._blogPostRepository = blogPostRepository;
+      this._categoryRepository = categoryRepository;
 
     }
 
-    //api/categories
+
+
+    //POST: {apibasurl}/api/blogposts
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> CreateBlogPost([FromBody] BlogPostCreateDto blogPostCreateDto)
+    {
+      // Convert DTO to Domain Model
+      var blogPost = new BlogPost
+      {
+        Title = blogPostCreateDto.Title,
+        ShortDescription = blogPostCreateDto.ShortDescription,
+        Content = blogPostCreateDto.Content,
+        FeaturedImageUrl = blogPostCreateDto.FeaturedImageUrl,
+        UrlHandle = blogPostCreateDto.UrlHandle,
+        PublishedDate = blogPostCreateDto.PublishedDate,
+        Author = blogPostCreateDto.Author,
+        IsVisible = blogPostCreateDto.IsVisible,
+        Categories = new List<Category>()
+      };
+
+      
+
+      foreach (var category in blogPostCreateDto.Categories)
+      {
+        var existingCategory = await _categoryRepository.GetById(category.Id);
+        if (existingCategory is not null)
+        {
+          blogPost.Categories.Add(existingCategory);
+        }
+      }
+
+      blogPost = await _blogPostRepository.CreateAsync(blogPost);
+
+      //Domain model to Dto
+      var response = new BlogPostDto
+      {
+        Id = blogPost.Id,
+        Title = blogPost.Title,
+        ShortDescription = blogPost.ShortDescription,
+        Content = blogPost.Content,
+        FeaturedImageUrl = blogPost.FeaturedImageUrl,
+        UrlHandle = blogPost.UrlHandle,
+        PublishedDate = blogPost.PublishedDate,
+        Author = blogPost.Author,
+        IsVisible = blogPost.IsVisible,
+
+      };
+      return Ok(response);
+    }
+
+
+    //GET: {apibaseurl}/api/blogposts
     [HttpGet]
     public async Task<IActionResult> GetAllBlogPosts()
     {
-      var categories = await _blogPostRepository.GetAllAsync();
+      var blogPosts = await _blogPostRepository.GetAllAsync();
 
+      //Convert Domain Model to DTO
       var response = new List<BlogPostDto>();
-      // map domain to dto
-      foreach (var blogPost in categories)
+     
+      foreach (var blogPost in blogPosts)
       {
         response.Add(new BlogPostDto
         {
@@ -58,41 +116,6 @@ namespace DotNetAPI2.Controllers
         return NotFound();
       }
 
-      var response = new BlogPostDto
-      {
-        Id = blogPost.Id,
-        Title = blogPost.Title,
-        ShortDescription = blogPost.ShortDescription,
-        Content = blogPost.Content,
-        FeaturedImageUrl = blogPost.FeaturedImageUrl,
-        UrlHandle = blogPost.UrlHandle,
-        PublishedDate = blogPost.PublishedDate,
-        Author = blogPost.Author,
-        IsVisible = blogPost.IsVisible
-      };
-      return Ok(response);
-    }
-
-    //POST: {apibasurl}/api/blogposts
-    [HttpPost]  
-    public async Task<IActionResult> CreateBlogPost([FromBody] BlogPostCreateDto blogPostCreateDto)
-    {
-      // Convert DTO to Domain Model
-      var blogPost = new BlogPost
-      {    
-        Title = blogPostCreateDto.Title,
-        ShortDescription = blogPostCreateDto.ShortDescription,
-        Content = blogPostCreateDto.Content,
-        FeaturedImageUrl = blogPostCreateDto.FeaturedImageUrl,
-        UrlHandle = blogPostCreateDto.UrlHandle,
-        PublishedDate = blogPostCreateDto.PublishedDate,
-        Author = blogPostCreateDto.Author,
-        IsVisible = blogPostCreateDto.IsVisible
-      };
-
-      blogPost = await _blogPostRepository.CreateAsync(blogPost);
-
-      //Domain model to Dto
       var response = new BlogPostDto
       {
         Id = blogPost.Id,

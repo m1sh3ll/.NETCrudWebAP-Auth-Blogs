@@ -10,14 +10,16 @@ namespace DotNetAPI2.Repositories.Implementation
 
     private readonly ApplicationDbContext _db;
 
+
+    //Inject the DbContext
     public BlogPostRepository(ApplicationDbContext db)
     {
       this._db = db;
     }
 
 
-    //Create/Add
-    async Task<BlogPost> IBlogPostRepository.CreateAsync(BlogPost blogPost)
+    //Add A Post
+    public  async Task<BlogPost> CreateAsync(BlogPost blogPost)
     {
       await _db.BlogPosts.AddAsync(blogPost);
       await _db.SaveChangesAsync();
@@ -25,7 +27,8 @@ namespace DotNetAPI2.Repositories.Implementation
       return blogPost; //return the domain model
     }
 
-    async Task<BlogPost?> IBlogPostRepository.DeleteAsync(Guid id)
+
+    public async Task<BlogPost?> DeleteAsync(Guid id)
     {
       var existingBlogPost = await _db.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -39,17 +42,20 @@ namespace DotNetAPI2.Repositories.Implementation
       return existingBlogPost;
     }
 
-    async Task<IEnumerable<BlogPost>> IBlogPostRepository.GetAllAsync()
+
+
+    public async Task<IEnumerable<BlogPost>> GetAllAsync()
     {
       return await _db.BlogPosts.ToListAsync();
     }
 
-    async Task<BlogPost?> IBlogPostRepository.GetById(Guid id)
+
+    public async Task<BlogPost?> GetById(Guid id)
     {
       return await _db.BlogPosts.FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    async Task<BlogPost?> IBlogPostRepository.UpdateAsync(BlogPost blogPost)
+    public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
     {
       var existingBlogPost = await _db.BlogPosts.FirstOrDefaultAsync(x => x.Id == blogPost.Id);
 
