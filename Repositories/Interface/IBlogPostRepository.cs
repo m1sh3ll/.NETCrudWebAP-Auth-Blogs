@@ -8,7 +8,7 @@ namespace DotNetAPI2.Repositories.Interface
 
     public Task<IEnumerable<BlogPost>> GetAllAsync();
 
-    public Task<BlogPost?> GetById(Guid id);
+    public Task<BlogPost?> GetByIdAsync(Guid id);
 
     public Task<BlogPost?> UpdateAsync(BlogPost blogPost);  
 

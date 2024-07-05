@@ -51,26 +51,33 @@ namespace DotNetAPI2.Repositories.Implementation
     }
 
 
-    public async Task<BlogPost?> GetById(Guid id)
+    public async Task<BlogPost?> GetByIdAsync(Guid id)
     {
-      return await _db.BlogPosts.FirstOrDefaultAsync(u => u.Id == id);
+      return await _db.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
     {
-      var existingBlogPost = await _db.BlogPosts.FirstOrDefaultAsync(x => x.Id == blogPost.Id);
+      var existingBlogPost = await _db.BlogPosts.Include(x=>x.Categories)
+                                  .FirstOrDefaultAsync(x => x.Id == blogPost.Id);
 
-      if (existingBlogPost is not null)
-      {
+      if (existingBlogPost == null) {
+        return null;
+      }
+      
+      //Update BlogPost
         _db.Entry(existingBlogPost).CurrentValues.SetValues(blogPost);
-        //same as this
+        
         //existingBlogPost.Name = blogPost.Name;
         //existingBlogPost.UrlHandle = blogPost.UrlHandle;
+
+        //Update Categories
+        existingBlogPost.Categories = blogPost.Categories;
         await _db.SaveChangesAsync();
         return blogPost;
-      }
+      
 
-      return null;
+      
     }
   }
 }

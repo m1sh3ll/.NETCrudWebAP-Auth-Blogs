@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace DotNetAPI2.Controllers
 {
-
-
   [Route("api/[controller]")]
   [ApiController]
   public class BlogPostsController : ControllerBase
@@ -21,10 +19,7 @@ namespace DotNetAPI2.Controllers
     {
       this._blogPostRepository = blogPostRepository;
       this._categoryRepository = categoryRepository;
-
     }
-
-
 
     //POST: {apibasurl}/api/blogposts
     [HttpPost]
@@ -44,8 +39,6 @@ namespace DotNetAPI2.Controllers
         IsVisible = blogPostCreateDto.IsVisible,
         Categories = new List<Category>()
       };
-
-
 
       foreach (var categoryGuid in blogPostCreateDto.Categories)
       {
@@ -80,7 +73,6 @@ namespace DotNetAPI2.Controllers
       return Ok(response);
     }
 
-
     //GET: {apibaseurl}/api/blogposts
     [HttpGet]
     public async Task<IActionResult> GetAllBlogPosts()
@@ -114,20 +106,20 @@ namespace DotNetAPI2.Controllers
       return Ok(response);
     }
 
-
-
-    //api/blogposts/{guid}}
+    //GET: {apibaseurl}/api/blogposts/{id}
     [HttpGet]
     [Route("{id:Guid}")]
     public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
     {
-      var blogPost = await _blogPostRepository.GetById(id);
+    // Get the blog post from the repository
+      var blogPost = await _blogPostRepository.GetByIdAsync(id);
 
       if (blogPost is null)
       {
         return NotFound();
       }
 
+      //Convert domain model to DTO
       var response = new BlogPostDto
       {
         Id = blogPost.Id,
@@ -138,12 +130,17 @@ namespace DotNetAPI2.Controllers
         UrlHandle = blogPost.UrlHandle,
         PublishedDate = blogPost.PublishedDate,
         Author = blogPost.Author,
-        IsVisible = blogPost.IsVisible
+        IsVisible = blogPost.IsVisible,
+        Categories = blogPost.Categories.Select(x => new CategoryDto{
+          Id = x.Id,
+          Name = x.Name,
+          UrlHandle = x.UrlHandle
+        }).ToList()
       };
       return Ok(response);
     }
 
-    //api/blogposts/{id}
+    //DELETE: {apibaseurl}/api/blogposts/{id}
     [HttpDelete("{id:Guid}")]
     public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
     {
@@ -164,19 +161,16 @@ namespace DotNetAPI2.Controllers
         PublishedDate = blogPost.PublishedDate,
         Author = blogPost.Author,
         IsVisible = blogPost.IsVisible
-
       };
 
       return Ok(response);
-
     }
 
-
-    //api/blogposts/{id}
+    //PUT: {apibaseurl}/api/blogposts/{id}
     [HttpPut("{id:Guid}")]
-    public async Task<IActionResult> EditBlogPost([FromRoute] Guid id, UpdateBlogPostRequestDto blogPostUpdateDto)
+    public async Task<IActionResult> UpdateBlogPost([FromRoute] Guid id, UpdateBlogPostRequestDto blogPostUpdateDto)
     {
-      //convert dto to Domain model
+      //Convert DTO to Domain Model
       var blogPost = new BlogPost
       {
         Id = id,
@@ -187,20 +181,29 @@ namespace DotNetAPI2.Controllers
         UrlHandle = blogPostUpdateDto.UrlHandle,
         PublishedDate = blogPostUpdateDto.PublishedDate,
         Author = blogPostUpdateDto.Author,
-        IsVisible = blogPostUpdateDto.IsVisible
+        IsVisible = blogPostUpdateDto.IsVisible,
+        Categories = new List<Category>()
       };
 
-      blogPost = await _blogPostRepository.UpdateAsync(blogPost);
+      foreach (var categoryGuid in blogPostUpdateDto.Categories)  
+      {
+        var existingCategory = await _categoryRepository.GetById(categoryGuid);
 
-      if (blogPost is null)
+        if(existingCategory is not null){
+          blogPost.Categories.Add(existingCategory);
+        }
+      }
+      //Call Repository to Update BlogPost Domain Model
+      var updatedBlogPost = await _blogPostRepository.UpdateAsync(blogPost);
+      if (updatedBlogPost is null)
       {
         return NotFound();
       }
 
-      //convert domain model to DTO
+      //Convert Domain Model back to DTO
       var response = new BlogPostDto
       {
-        Id = id,
+        Id = blogPost.Id,
         Title = blogPostUpdateDto.Title,
         ShortDescription = blogPostUpdateDto.ShortDescription,
         Content = blogPostUpdateDto.Content,
@@ -208,14 +211,16 @@ namespace DotNetAPI2.Controllers
         UrlHandle = blogPostUpdateDto.UrlHandle,
         PublishedDate = blogPostUpdateDto.PublishedDate,
         Author = blogPostUpdateDto.Author,
-        IsVisible = blogPostUpdateDto.IsVisible
+        IsVisible = blogPostUpdateDto.IsVisible,
+        Categories = blogPost.Categories.Select(x => new CategoryDto
+        {
+          Id = x.Id,
+          Name = x.Name,
+          UrlHandle = x.UrlHandle
+        }).ToList()
       };
 
-
       return Ok(response);
-
-
     }
-
   }
 }
