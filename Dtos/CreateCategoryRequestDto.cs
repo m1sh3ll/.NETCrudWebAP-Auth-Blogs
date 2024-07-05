@@ -2,12 +2,12 @@
 
 namespace DotNetAPI2.Dtos
 {
-  public class CategoryCreateDto
+  public class CreateCategoryRequestDto 
   {
     public string Name { get; set; }
 
     public string UrlHandle { get; set; }
 
-    public List<BlogPost> BlogPosts { get; set; }
+    
   }
 }

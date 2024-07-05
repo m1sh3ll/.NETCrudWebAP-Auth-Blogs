@@ -68,7 +68,7 @@ namespace DotNetAPI2.Controllers
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> CreateCategory(CategoryCreateDto categoryCreateDto)
+    public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto categoryCreateDto)
     {
       // Map DTO to Domain Model
       Category category = new Category

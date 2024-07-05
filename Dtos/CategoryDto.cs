@@ -9,6 +9,6 @@ namespace DotNetAPI2.Dtos
     public string Name { get; set; }
 
     public string UrlHandle { get; set; }
-    public List<BlogPost> BlogPosts { get; set; }
+   
   }
 }

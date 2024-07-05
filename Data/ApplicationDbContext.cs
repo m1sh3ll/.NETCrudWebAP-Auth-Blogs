@@ -17,12 +17,7 @@ namespace DotNetAPI2.Data
     public DbSet<BlogPost> BlogPosts { get; set; }  
     
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-      base.OnModelCreating(modelBuilder);
-     
-
-    }
+    
 
 
   }

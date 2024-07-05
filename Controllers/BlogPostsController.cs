@@ -5,15 +5,16 @@ using DotNetAPI2.Repositories.Implementation;
 using DotNetAPI2.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 namespace DotNetAPI2.Controllers
 {
+
+
   [Route("api/[controller]")]
   [ApiController]
   public class BlogPostsController : ControllerBase
   {
     private readonly IBlogPostRepository _blogPostRepository;
-    private readonly ICategoryRepository _categoryRepository; 
+    private readonly ICategoryRepository _categoryRepository;
 
     public BlogPostsController(IBlogPostRepository blogPostRepository,
     ICategoryRepository categoryRepository)
@@ -28,7 +29,7 @@ namespace DotNetAPI2.Controllers
     //POST: {apibasurl}/api/blogposts
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> CreateBlogPost([FromBody] BlogPostCreateDto blogPostCreateDto)
+    public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto blogPostCreateDto)
     {
       // Convert DTO to Domain Model
       var blogPost = new BlogPost
@@ -44,11 +45,11 @@ namespace DotNetAPI2.Controllers
         Categories = new List<Category>()
       };
 
-      
 
-      foreach (var category in blogPostCreateDto.Categories)
+
+      foreach (var categoryGuid in blogPostCreateDto.Categories)
       {
-        var existingCategory = await _categoryRepository.GetById(category.Id);
+        var existingCategory = await _categoryRepository.GetById(categoryGuid);
         if (existingCategory is not null)
         {
           blogPost.Categories.Add(existingCategory);
@@ -69,7 +70,12 @@ namespace DotNetAPI2.Controllers
         PublishedDate = blogPost.PublishedDate,
         Author = blogPost.Author,
         IsVisible = blogPost.IsVisible,
-
+        Categories = blogPost.Categories.Select(x => new CategoryDto
+        {
+          Id = x.Id,
+          Name = x.Name,
+          UrlHandle = x.UrlHandle
+        }).ToList()
       };
       return Ok(response);
     }
@@ -83,7 +89,7 @@ namespace DotNetAPI2.Controllers
 
       //Convert Domain Model to DTO
       var response = new List<BlogPostDto>();
-     
+
       foreach (var blogPost in blogPosts)
       {
         response.Add(new BlogPostDto
@@ -96,7 +102,13 @@ namespace DotNetAPI2.Controllers
           UrlHandle = blogPost.UrlHandle,
           PublishedDate = blogPost.PublishedDate,
           Author = blogPost.Author,
-          IsVisible = blogPost.IsVisible
+          IsVisible = blogPost.IsVisible,
+          Categories = blogPost.Categories.Select(x => new CategoryDto
+          {
+            Id = x.Id,
+            Name = x.Name,
+            UrlHandle = x.UrlHandle
+          }).ToList()
         });
       }
       return Ok(response);
@@ -132,7 +144,7 @@ namespace DotNetAPI2.Controllers
     }
 
     //api/blogposts/{id}
-    [HttpDelete("{id:Guid}")]    
+    [HttpDelete("{id:Guid}")]
     public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
     {
       var blogPost = await _blogPostRepository.DeleteAsync(id);
@@ -162,11 +174,11 @@ namespace DotNetAPI2.Controllers
 
     //api/blogposts/{id}
     [HttpPut("{id:Guid}")]
-    public async Task<IActionResult> EditBlogPost([FromRoute] Guid id, BlogPostUpdateDto blogPostUpdateDto)
+    public async Task<IActionResult> EditBlogPost([FromRoute] Guid id, UpdateBlogPostRequestDto blogPostUpdateDto)
     {
       //convert dto to Domain model
       var blogPost = new BlogPost
-      { 
+      {
         Id = id,
         Title = blogPostUpdateDto.Title,
         ShortDescription = blogPostUpdateDto.ShortDescription,

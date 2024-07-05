@@ -2,7 +2,7 @@
 
 namespace DotNetAPI2.Dtos
 {
-  public class BlogPostUpdateDto
+  public class CreateBlogPostRequestDto
   {
     public string Title { get; set; }
 
@@ -19,6 +19,6 @@ namespace DotNetAPI2.Dtos
     public string Author { get; set; }
 
     public bool IsVisible { get; set; }
-    public List<Category> Categories { get; set; }
+    public Guid[] Categories { get; set; } 
   }
 }
