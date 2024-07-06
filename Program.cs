@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -78,7 +80,7 @@ builder.Services.AddCors(); //for janpreets video
 
 
 builder.Services.AddControllers();
-
+builder.Services.AddHttpContextAccessor(); //For the image uploads
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -118,9 +120,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-
+//Injecting the services into the services collection to be able to use the repositories in the controllers
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>(); //For the image uploads
 
 var app = builder.Build();
 
@@ -140,6 +143,9 @@ app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()); //for ja
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+//Webhost provider that is injected into Program.cs
+//For the image uploads only
 app.UseStaticFiles(new StaticFileOptions
 {
   FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),

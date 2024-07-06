@@ -14,6 +14,8 @@ namespace DotNetAPI2.Controllers
     private readonly IBlogPostRepository _blogPostRepository;
     private readonly ICategoryRepository _categoryRepository;
 
+
+    //use constructor injection for the repos
     public BlogPostsController(IBlogPostRepository blogPostRepository,
     ICategoryRepository categoryRepository)
     {
