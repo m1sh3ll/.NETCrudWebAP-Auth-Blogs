@@ -77,10 +77,12 @@ namespace DotNetAPI2.Repositories.Implementation
         //Update Categories
         existingBlogPost.Categories = blogPost.Categories;
         await _db.SaveChangesAsync();
-        return blogPost;
-      
+        return blogPost;   
+    }
 
-      
+    public async Task<BlogPost?> GetByUrlHandleAsync(string urlHandle)
+    {
+      return await _db.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
     }
   }
 }

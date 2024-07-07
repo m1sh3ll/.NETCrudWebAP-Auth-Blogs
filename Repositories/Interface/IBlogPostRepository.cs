@@ -13,5 +13,8 @@ namespace DotNetAPI2.Repositories.Interface
     public Task<BlogPost?> UpdateAsync(BlogPost blogPost);  
 
     public Task<BlogPost?> DeleteAsync(Guid id);
+    Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
+
+
   }
 }
