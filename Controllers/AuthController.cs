@@ -1,16 +1,13 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
+﻿using DotNetAPI2.Data;
+using DotNetAPI2.Dtos;
+using DotNetAPI2.Models;
+using DotNetAPI2.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using DotNetAPI2.Data;
-using DotNetAPI2.Models;
-using DotNetAPI2.Dtos;
-using DotNetAPI2.Utility;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace DotNetAPI2.Controllers
 {
