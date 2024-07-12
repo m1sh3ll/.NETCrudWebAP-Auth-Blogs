@@ -15,6 +15,7 @@ namespace DotNetAPI2.Repositories.Implementation
       this._db = db;
     }
 
+
     public async Task<Category> CreateAsync(Category category)
     {
       await _db.Categories.AddAsync(category);
@@ -22,6 +23,7 @@ namespace DotNetAPI2.Repositories.Implementation
 
       return category; //return the domain model
     }
+
 
 
     public async Task<IEnumerable<Category>> GetAllAsync()
@@ -35,6 +37,7 @@ namespace DotNetAPI2.Repositories.Implementation
     {
       return await _db.Categories.FirstOrDefaultAsync(u => u.Id == id);
     }
+
 
     public async Task<Category?> UpdateAsync(Category category)
     {
@@ -54,6 +57,8 @@ namespace DotNetAPI2.Repositories.Implementation
       return null;
 
     }
+
+
     public async Task<Category?> DeleteAsync(Guid id)
     {
 

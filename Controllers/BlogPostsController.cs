@@ -5,6 +5,7 @@ using DotNetAPI2.Repositories.Implementation;
 using DotNetAPI2.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace DotNetAPI2.Controllers
 {
   [Route("api/[controller]")]
@@ -23,7 +24,7 @@ namespace DotNetAPI2.Controllers
       this._categoryRepository = categoryRepository;
     }
 
-    //POST: {apibasurl}/api/blogposts
+    //POST: {apibaseurl}/api/blogposts
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto blogPostCreateDto)
@@ -75,6 +76,9 @@ namespace DotNetAPI2.Controllers
       return Ok(response);
     }
 
+
+
+
     //GET: {apibaseurl}/api/blogposts
     [HttpGet]
     public async Task<IActionResult> GetAllBlogPosts()
@@ -107,6 +111,9 @@ namespace DotNetAPI2.Controllers
       }
       return Ok(response);
     }
+
+
+
 
     //GET: {apibaseurl}/api/blogposts/{id}
     [HttpGet]
@@ -141,6 +148,8 @@ namespace DotNetAPI2.Controllers
       };
       return Ok(response);
     }
+
+
 
 
     //PUT: {apibaseurl}/api/blogposts/{id}
