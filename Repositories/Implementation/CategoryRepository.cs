@@ -26,9 +26,25 @@ namespace DotNetAPI2.Repositories.Implementation
 
 
 
-    public async Task<IEnumerable<Category>> GetAllAsync()
+    public async Task<IEnumerable<Category>> GetAllAsync(string? query = null)
     {
-      return await _db.Categories.ToListAsync();
+
+      //Query
+      var categories = _db.Categories.AsQueryable();
+
+      // Filtering
+      if (string.IsNullOrWhiteSpace(query) == false)
+      {
+        categories = categories.Where(x => x.Name.Contains(query));
+      }
+
+      //Sorting
+
+
+      //Pagination
+
+
+      return await categories.ToListAsync();
 
     }
 

@@ -23,11 +23,11 @@ namespace DotNetAPI2.Controllers
     }
 
 
-    //api/categories
+    // GET: https://localhost:7226/api/Categories?query=html&sortBy=name&sortDirection=desc
     [HttpGet]    
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories([FromQuery] string? query )
     {
-      var categories = await _categoryRepository.GetAllAsync();
+      var categories = await _categoryRepository.GetAllAsync(query);
 
       var response = new List<CategoryDto>();
       // map domain to dto
