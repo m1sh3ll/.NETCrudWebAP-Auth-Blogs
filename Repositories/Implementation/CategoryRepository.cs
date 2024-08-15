@@ -9,6 +9,7 @@ namespace DotNetAPI2.Repositories.Implementation
   {
 
     private readonly ApplicationDbContext _db;
+    private const int _defaultPageSize = 15;
 
     public CategoryRepository(ApplicationDbContext db)
     {
@@ -26,7 +27,12 @@ namespace DotNetAPI2.Repositories.Implementation
 
 
 
-    public async Task<IEnumerable<Category>> GetAllAsync(string? query = null, string? sortBy = null, string? sortDirection = null)
+    public async Task<IEnumerable<Category>> GetAllAsync(
+    string? query = null, 
+    string? sortBy = null, 
+    string? sortDirection = null,
+    int? pageNumber = 1,
+    int? pageSize= _defaultPageSize)
     {
 
       //Query
@@ -59,8 +65,14 @@ namespace DotNetAPI2.Repositories.Implementation
         }
       }
 
-      //Pagination
+      //Pagination 
+      //Pagesize 5
+      //Pagenumber 1 - skip 0, take 5
+      //Pagenumber 2 - skip 5 take 5
+      //Pagenumber 3 - skip 10 take 5
+      var skipResults = (pageNumber - 1) * pageSize;
 
+      categories = categories.Skip(skipResults ?? 0).Take(pageSize ?? _defaultPageSize); //skipResults defaults to 0, pageSize defaults to default
 
       return await categories.ToListAsync();
 

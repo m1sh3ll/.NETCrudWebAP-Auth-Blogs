@@ -6,7 +6,12 @@ namespace DotNetAPI2.Repositories.Interface
   {
     public Task<Category> CreateAsync(Category category);
 
-    public Task<IEnumerable<Category>>GetAllAsync(string? query = null, string? sortBy = null, string? sortDirection = null);
+    public Task<IEnumerable<Category>>GetAllAsync(
+    string? query = null, 
+    string? sortBy = null, 
+    string? sortDirection = null,
+    int? pageNumber = 1,
+    int? pageSize=15);
 
     public Task<Category?> GetById(Guid id);
 

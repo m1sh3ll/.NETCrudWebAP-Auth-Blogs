@@ -1,7 +1,6 @@
 ﻿using DotNetAPI2.Dtos;
 using DotNetAPI2.Models;
 using DotNetAPI2.Repositories.Interface;
-using DotNetAPI2.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,11 +22,20 @@ namespace DotNetAPI2.Controllers
     }
 
 
+
     // GET: https://localhost:7226/api/Categories?query=html&sortBy=name&sortDirection=desc
     [HttpGet]    
-    public async Task<IActionResult> GetAllCategories([FromQuery] string? query, [FromQuery] string? sortBy, [FromQuery] string sortDirection)  
+    public async Task<IActionResult> GetAllCategories(
+    [FromQuery] string? query, 
+    [FromQuery] string? sortBy, 
+    [FromQuery] string sortDirection,
+    [FromQuery] int? pageNumber,
+    [FromQuery] int? pageSize)  
     {
-      var categories = await _categoryRepository.GetAllAsync(query, sortBy, sortDirection);
+      var categories = await _categoryRepository.GetAllAsync(
+      query, 
+      sortBy, 
+      sortDirection);
 
       var response = new List<CategoryDto>();
       // map domain to dto
