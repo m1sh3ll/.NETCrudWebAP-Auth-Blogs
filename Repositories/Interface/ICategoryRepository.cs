@@ -1,4 +1,5 @@
 ﻿using DotNetAPI2.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetAPI2.Repositories.Interface
 {
@@ -18,5 +19,8 @@ namespace DotNetAPI2.Repositories.Interface
     public Task<Category?> UpdateAsync(Category category);
 
     public Task<Category?> DeleteAsync(Guid id);
+
+    public Task<int> GetCount();
+
   }
 }

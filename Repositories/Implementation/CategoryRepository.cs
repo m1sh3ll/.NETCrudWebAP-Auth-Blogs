@@ -52,7 +52,6 @@ namespace DotNetAPI2.Repositories.Implementation
           var isAsc = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase)
               ? true : false;
 
-
           categories = isAsc ? categories.OrderBy(x => x.Name) : categories.OrderByDescending(x => x.Name);
         }
 
@@ -73,9 +72,7 @@ namespace DotNetAPI2.Repositories.Implementation
       var skipResults = (pageNumber - 1) * pageSize;
 
       categories = categories.Skip(skipResults ?? 0).Take(pageSize ?? _defaultPageSize); //skipResults defaults to 0, pageSize defaults to default
-
       return await categories.ToListAsync();
-
     }
 
 
@@ -87,7 +84,6 @@ namespace DotNetAPI2.Repositories.Implementation
 
     public async Task<Category?> UpdateAsync(Category category)
     {
-
       var existingCategory = await _db.Categories.FirstOrDefaultAsync(x => x.Id == category.Id);
 
       if (existingCategory is not null)
@@ -99,15 +95,12 @@ namespace DotNetAPI2.Repositories.Implementation
         await _db.SaveChangesAsync();
         return category;
       }
-
       return null;
-
     }
 
 
     public async Task<Category?> DeleteAsync(Guid id)
     {
-
       var existingCategory = await _db.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
       if (existingCategory is null)
@@ -118,8 +111,13 @@ namespace DotNetAPI2.Repositories.Implementation
       _db.Categories.Remove(existingCategory);
       await _db.SaveChangesAsync();
       return existingCategory;
-
     }
+
+
+    public async Task<int> GetCount() {
+      return await _db.Categories.CountAsync();
+    }
+
 
   }
 }

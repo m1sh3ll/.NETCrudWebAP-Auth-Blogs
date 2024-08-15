@@ -35,7 +35,9 @@ namespace DotNetAPI2.Controllers
       var categories = await _categoryRepository.GetAllAsync(
       query, 
       sortBy, 
-      sortDirection);
+      sortDirection,
+      pageNumber,
+      pageSize);
 
       var response = new List<CategoryDto>();
       // map domain to dto
@@ -147,9 +149,17 @@ namespace DotNetAPI2.Controllers
         UrlHandle = categoryUpdateDto.UrlHandle
       };
 
-
       return Ok(response);
+    }
 
+
+
+    //GET: https://domain/api/categories/count
+    [HttpGet]
+    [Route("count")]
+    public async Task<IActionResult> GetCategoriesTotal() {
+      var count = await _categoryRepository.GetCount();
+      return Ok(count);
 
     }
 
